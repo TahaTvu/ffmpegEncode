@@ -42,7 +42,7 @@ static void encode(AVCodecContext* enc_ctx, AVFrame* frame, AVPacket* pkt,
     if (frame)
         printf("Send frame %d \n", frame->pts);
 
-    int64_t ms_in = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    int64_t ms_in = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count();
     std::time_t incoming = std::time(nullptr);
     ret = avcodec_send_frame(enc_ctx, frame);
     if (ret < 0) {
@@ -60,7 +60,7 @@ static void encode(AVCodecContext* enc_ctx, AVFrame* frame, AVPacket* pkt,
             exit(1);
         }
 
-        int64_t ms_out = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+        int64_t ms_out = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count();
      //   std::time_t outgoing = std::time(nullptr);
        totalTime += (ms_out - ms_in);
        count++;
@@ -68,7 +68,7 @@ static void encode(AVCodecContext* enc_ctx, AVFrame* frame, AVPacket* pkt,
        if (count == 1000){
 	       //std::cout<< "Total Time for 1000 frames: "<< totalTime <<"\n";
 	        std::cout << "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-       		std::cout << " Average time to encode 1000 frames : " <<  totalTime/1000 <<" ms.\n";
+       		std::cout << " Average time to encode 1000 frames : " <<  totalTime/1000 <<" ns.\n";
 		std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
 		totalTime = 0;
 		count = 0;
