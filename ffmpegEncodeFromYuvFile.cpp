@@ -30,6 +30,9 @@ using namespace std::chrono;
 //
 //std::vector<EncodeFrame> vframe;
 
+
+int count = 0;
+int totalTime = 0;
 static void encode(AVCodecContext* enc_ctx, AVFrame* frame, AVPacket* pkt,
     FILE* outfile)
 {
@@ -59,9 +62,20 @@ static void encode(AVCodecContext* enc_ctx, AVFrame* frame, AVPacket* pkt,
 
         int64_t ms_out = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
      //   std::time_t outgoing = std::time(nullptr);
-       std::cout << "Incoming time : " << ms_in << ", Outgoing time: " << ms_out <<", Encoding time: " << ms_out - ms_in <<std::endl;
-    //    printf("Incoming time: %ld, Outgoing time: %ld, Encoding time: %d \n", ms_in, ms_out, ms_out - ms_in);
-        printf("Write packet %d  and packet size %d\n", pkt->pts, pkt->size);
+       totalTime += (ms_out - ms_in);
+       count++;
+
+       if (count == 1000){
+	       //std::cout<< "Total Time for 1000 frames: "<< totalTime <<"\n";
+	        std::cout << "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+       		std::cout << " Average time to encode 1000 frames : " <<  totalTime/1000 <<" ms.\n";
+		std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
+		totalTime = 0;
+		count = 0;
+       }
+//       std::cout << "Incoming time : " << ms_in << ", Outgoing time: " << ms_out <<", Encoding time: " << ms_out - ms_in <<std::endl;
+//        printf("Incoming time: %ld, Outgoing time: %ld, Encoding time: %d \n", ms_in, ms_out, ms_out - ms_in);
+  //      printf("Write packet %d  and packet size %d\n", pkt->pts, pkt->size);
         fwrite(pkt->data, 1, pkt->size, outfile);
         //vframe.push_back(EncodeFrame(pkt->size, pkt->data));
         av_packet_unref(pkt);
