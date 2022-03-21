@@ -126,7 +126,7 @@ int main(int argc, char** argv)
     }
     /* put sample parameters */
     //c->bit_rate = 400000;
-    c->bit_rate = 20000000;
+    c->bit_rate = 200000000;
     /* resolution must be a multiple of two */
     c->width = WIDTH;//352;
     c->height = HEIGHT;//288;
